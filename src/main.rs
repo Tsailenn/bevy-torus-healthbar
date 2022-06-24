@@ -2,6 +2,10 @@
 #![allow(clippy::type_complexity)]
 #![allow(clippy::too_many_arguments)]
 
+pub mod torus_healthbar;
+
+use std::f32::consts::PI;
+
 use bevy::{
     prelude::*,
     render::camera::ScalingMode,
@@ -9,6 +13,7 @@ use bevy::{
     window::PresentMode,
 };
 use bevy_inspector_egui::{WorldInspectorParams, WorldInspectorPlugin};
+use torus_healthbar::TorusHealthbar2D;
 
 pub const CLEAR: Color = Color::rgb(0.3, 0.3, 0.3);
 pub const HEIGHT: f32 = 900.0;
@@ -36,8 +41,10 @@ fn main() {
         .add_plugin(WorldInspectorPlugin::new())
         .add_startup_system(spawn_camera)
         .add_system(toggle_inspector)
-        .add_startup_system(torus)
-        .add_system(rotate_torus)
+        .add_startup_system(test_spawn_healthbar)
+        //.add_system(test_damage)
+        // .add_startup_system(torus)
+        // .add_system(rotate_torus)
         .run();
 }
 
@@ -69,43 +76,52 @@ fn slow_down() {
     std::thread::sleep(std::time::Duration::from_secs_f32(1.000));
 }
 
-fn torus(
+#[allow(dead_code)]
+fn test_spawn_healthbar(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    // commands.spawn_bundle(MaterialMesh2dBundle {
-    //     mesh: meshes.add(
-    //         shape::Torus {
-    //             ..Default::default()
-    //         },
-    //         ..default(),
-    //     ),
-    //     ..default()
-    // });
-    let t = shape::Torus {
-        radius: 0.4,
-        ring_radius: 0.05,
-        subdivisions_segments: 36,
-        subdivisions_sides: 36,
-    };
+    let torus_health = TorusHealthbar2D::new(
+        0.1,
+        0.2,
+        360.,
+        360.,
+        18,
+        Color::MIDNIGHT_BLUE,
+        &mut meshes,
+        &mut materials,
+    );
+
+    // shape::Quad::default();
+
+    // commands.spawn_bundle((
+    //     torus_health.mesh_handle.clone(),
+    //     Transform {
+    //         rotation: Quat::from_rotation_x(45. * PI / 180.),
+    //         ..default()
+    //     },
+    //     GlobalTransform::default(),
+    //     Visibility::default(),
+    //     ComputedVisibility::default(),
+    // ));
 
     commands
         .spawn_bundle(MaterialMesh2dBundle {
-            mesh: Mesh2dHandle(meshes.add(Mesh::from(t))).into(),
-            material: materials.add(ColorMaterial::from(Color::TURQUOISE)),
-            transform: Transform {
-                rotation: Quat::from_rotation_x(90. * (3.14 / 180.)),
-                ..default()
-            },
+            mesh: torus_health.mesh_handle.clone(),
+            material: torus_health.color_handle.clone(),
             ..default()
         })
-        .insert(Torus);
+        .insert(torus_health);
 }
 
-fn rotate_torus(mut torus_query: Query<(&mut Transform), With<Torus>>, time: Res<Time>) {
-    for mut torus in torus_query.iter_mut() {
-        //torus.rotate(Quat::from_rotation_x(1.));
-        torus.rotate(Quat::from_rotation_x(3.14 / 180.));
+#[allow(dead_code, unused_parens)]
+fn test_damage(
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut health_torus_query: Query<(&mut TorusHealthbar2D)>,
+    //time: Res<Time>,
+) {
+    for mut i in health_torus_query.iter_mut() {
+        i.add_health(&mut meshes, -0.5);
     }
 }
