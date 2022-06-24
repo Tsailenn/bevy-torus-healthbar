@@ -10,7 +10,7 @@ use bevy::{
 use bevy_inspector_egui::Inspectable;
 use rand::Rng;
 
-#[derive(Debug, Clone, Component, Inspectable)]
+#[derive(Debug, Clone, Component)]
 pub struct TorusHealthbar2D {
     pub hole_radius: f32,
     pub circle_radius: f32,
