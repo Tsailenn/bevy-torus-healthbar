@@ -527,7 +527,6 @@ name = "bevy_radial_bar"
 version = "0.1.0"
 dependencies = [
  "bevy",
- "rand",
 ]
 
 [[package]]
