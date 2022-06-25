@@ -5,16 +5,7 @@ edition = "2021"
 authors = ["Tsailenn"]
 license = "MIT OR Apache-2.0"
 description = "Radial bar component. Provides simplified mesh generation and its handle. Perfect for indicating health, countdown, and more."
-keywords = [
-    "bevy",
-    "gamedev",
-    "graphics",
-    "2d",
-    "sprites",
-    "healthbar",
-    "component",
-    "radial",
-]
+keywords = ["bevy", "gamedev", "2d", "component", "radial"]
 categories = ["game-development"]
 repository = "https://github.com/Tsailenn/bevy-torus-healthbar"
 
