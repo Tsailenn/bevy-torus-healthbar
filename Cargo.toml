@@ -1,5 +1,5 @@
 [package]
-name = "bevy-radial-bar"
+name = "bevy_radial_bar"
 version = "0.1.0"
 edition = "2021"
 authors = ["Tsailenn"]
